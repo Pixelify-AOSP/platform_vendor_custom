@@ -443,6 +443,9 @@
          should also be non-empty.-->
     <string name="config_rawContactsLocalAccountType" translatable="false">com.android.contacts</string>
 
+    <!-- Suppress Intent Filter Verification Service crashes -->
+    <string translatable="false" name="config_appsNotReportingCrashes">com.android.statementservice</string>
+
     <!-- Whether to enable glanceable hub features on this device. -->
     <bool name="config_glanceableHubEnabled">true</bool>
 
