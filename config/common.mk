@@ -57,10 +57,8 @@ endif
 
 ifneq ($(strip $(AB_OTA_PARTITIONS) $(AB_OTA_POSTINSTALL_CONFIG)),)
 
-ifneq ($(TARGET_BUILD_VARIANT),user)
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.ota.allow_downgrade=true
-endif
 endif
 
 # Enable SIP+VoIP on all targets
