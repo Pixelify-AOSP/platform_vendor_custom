@@ -343,3 +343,7 @@ ifneq ($(TARGET_SUPPORTS_QUICK_TAP),false)
 PRODUCT_PACKAGES += \
     ColumbusService
 endif
+
+# OmniJaws
+PRODUCT_PACKAGES += \
+    OmniJaws
