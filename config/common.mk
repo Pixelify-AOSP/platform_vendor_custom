@@ -118,7 +118,7 @@ PRODUCT_PACKAGES += \
 
 # Enforce privapp-permissions whitelist
 PRODUCT_PRODUCT_PROPERTIES += \
-    ro.control_privapp_permissions=enforce
+    ro.control_privapp_permissions?=enforce
 
 # Enable background blur for widget picker
 PRODUCT_SYSTEM_EXT_PROPERTIES += \
