@@ -246,6 +246,7 @@ endif
 # SystemUI
 PRODUCT_DEXPREOPT_SPEED_APPS += \
     CarSystemUI \
+    NexusLauncherRelease \
     SystemUI
 
 PRODUCT_PRODUCT_PROPERTIES += \
