@@ -289,3 +289,7 @@ else
         persist.sys.revan.mod=false
 endif
 
+# LMOFreeform
+PRODUCT_PACKAGES += \
+    LMOFreeform \
+    LMOFreeformSidebar
