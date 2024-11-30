@@ -296,3 +296,7 @@ ifeq ($(WITH_REVANCED),true)
     PRODUCT_SYSTEM_PROPERTIES += ro.revanced.enabled=true
 endif
 
+# LMOFreeform
+PRODUCT_PACKAGES += \
+    LMOFreeform \
+    LMOFreeformSidebar
