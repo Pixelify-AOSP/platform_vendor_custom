@@ -451,4 +451,10 @@
 
     <!-- Flag indicating whether we should enable smart battery. -->
     <bool name="config_smart_battery_available">true</bool>
+
+    <!-- Indicating if keyboard vibration settings supported or not. -->
+    <bool name="config_keyboardVibrationSettingsSupported">true</bool>
+
+    <!-- Indicating if ringtone vibration settings supported or not. -->
+    <bool name="config_ringtoneVibrationSettingsSupported">true</bool>
 </resources>
