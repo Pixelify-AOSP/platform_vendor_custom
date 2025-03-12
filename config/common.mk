@@ -259,6 +259,7 @@ PRODUCT_PACKAGE_OVERLAYS += \
 PRODUCT_PACKAGES += \
     DocumentsUIOverlay \
     NetworkStackOverlay \
+    NfcOverlay \
     PermissionControllerOverlay
 
 # Google Photos Pixel Exclusive XML
