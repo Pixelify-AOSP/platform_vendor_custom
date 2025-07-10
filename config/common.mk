@@ -142,6 +142,9 @@ ifeq ($(TARGET_BUILD_VARIANT), user)
     WITH_DEXPREOPT_DEBUG_INFO := false
     # Don't include art debug targets
     PRODUCT_ART_TARGET_INCLUDE_DEBUG_BUILD := false
+    # Always preopt extracted APKs to prevent extracting out of the APK for gms
+    # modules.
+    PRODUCT_ALWAYS_PREOPT_EXTRACTED_APK := true
 endif
 
 # Enable whole-program R8 Java optimizations for SystemUI and system_server,
