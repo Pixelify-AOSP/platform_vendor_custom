@@ -122,6 +122,9 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_SYSTEM_EXT_PROPERTIES += \
     ro.launcher.depth.widget=true
 
+# Fake Encryption 
+PRODUCT_PRODUCT_PROPERTIES += ro.crypto.state=encrypted
+
 # Do not include art debug targets
 PRODUCT_ART_TARGET_INCLUDE_DEBUG_BUILD := false
 
