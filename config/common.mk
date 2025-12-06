@@ -318,3 +318,9 @@ endif
 PRODUCT_PACKAGES += \
     LMOFreeform \
     LMOFreeformSidebar
+
+# ColumbusService
+ifneq ($(TARGET_SUPPORTS_QUICK_TAP),false)
+PRODUCT_PACKAGES += \
+    ColumbusService
+endif
