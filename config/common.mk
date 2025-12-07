@@ -106,10 +106,6 @@ endif
 PRODUCT_PACKAGES += \
     framework_compatibility_matrix.lineage.xml
 
-# Config
-PRODUCT_PACKAGES += \
-    SimpleSettingsConfig
-
 # Extra tools
 PRODUCT_PACKAGES += \
     bash \
