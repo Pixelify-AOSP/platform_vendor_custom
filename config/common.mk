@@ -36,6 +36,8 @@ endif
 PRODUCT_COPY_FILES += \
     vendor/custom/prebuilt/common/etc/sysconfig/preinstalled-packages-platform-ascp-product.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/preinstalled-packages-platform-ascp-product.xml
 
+TARGET_DISABLE_EPPE := true
+
 ifeq ($(TARGET_BUILD_VARIANT),eng)
 # Disable ADB authentication
 PRODUCT_SYSTEM_EXT_PROPERTIES += ro.adb.secure=0
