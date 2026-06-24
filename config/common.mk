@@ -53,6 +53,9 @@ endif
 PRODUCT_PRODUCT_PROPERTIES += persist.sys.strictmode.disable=true
 endif
 
+# GMS
+include vendor/custom/config/pixel.mk
+
 # Backup Tool
 PRODUCT_COPY_FILES += \
     vendor/custom/prebuilt/common/bin/backuptool.sh:install/bin/backuptool.sh \
@@ -221,7 +224,6 @@ $(call inherit-product, vendor/custom/audio/audio.mk)
 
 # SetupWizard
 PRODUCT_PRODUCT_PROPERTIES += \
-    setupwizard.theme=glif_v4 \
     setupwizard.feature.day_night_mode_enabled=true
 
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += vendor/custom/overlay/no-rro

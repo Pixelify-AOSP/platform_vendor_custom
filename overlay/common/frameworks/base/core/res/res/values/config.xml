@@ -320,32 +320,50 @@
         <item>device_personalization_services/SmartSelect__smart_select_example_ttl_ms=1209600000</item>
 
         <!-- Pixel Launcher -->
-        <item>launcher/ANIMATE_LPNH=true</item>
-        <item>launcher/CUSTOM_LPNH_THRESHOLDS=true</item>
-        <item>launcher/ENABLE_LOCAL_RECOMMENDED_WIDGETS_FILTER=false</item>
-        <item>launcher/ENABLE_LPNH_TWO_STAGES=true</item>
-        <item>launcher/ENABLE_SEARCH_HAPTIC_HINT=true</item>
-        <item>launcher/ENABLE_WIDGETS_PICKER_AIAI_SEARCH=true</item>
-        <item>launcher/LPNH_HAPTIC_HINT_DELAY=0</item>
-        <item>launcher/LPNH_HAPTIC_HINT_ITERATIONS=50</item>
-        <item>launcher/LPNH_TIMEOUT_MS=450</item>
-        <item>launcher/SHRINK_NAV_HANDLE_ON_PRESS=true</item>
-        <item>launcher/TWO_STAGE_DURATION_PERCENTAGE=200</item>
-        <item>launcher/TWO_STAGE_SLOP_PERCENTAGE=66</item>
-        <item>launcher/android.provider.launcher_data_access=true</item>
-        <item>launcher/PSB_RESKIN=true</item>
+        <item>launcher/enable_keyboard_transition_sync=true</item>
+        <item>launcher/ENABLE_LOCAL_RECOMMENDED_WIDGETS_FILTER=true</item>
+        <item>launcher/ENABLE_LONG_PRESS_NAV_HANDLE=true</item>
+        <item>launcher/ENABLE_LONG_PRESS_NAV_HANDLE_MPR=true</item>
         <item>launcher/enable_one_search=true</item>
-        <item>launcher/enable_one_search_aa=true</item>
-        <item>launcher/enable_quick_launch_v3_aa=true</item>
-        <item>launcher/gboard_update_enter_key=true</item>
+        <item>launcher/ENABLE_QUICK_LAUNCH_V2=true</item>
+        <item>launcher/enable_quick_launch_v2=true</item>
+        <item>launcher/enable_quick_search=true</item>
+        <item>launcher/enable_rich_answer=true</item>
+        <item>launcher/ENABLE_SEARCH_HAPTIC_HINT=true</item>
+        <item>launcher/ENABLE_SETTINGS_OSE_CUSTOMIZATIONS=true</item>
+        <item>launcher/ENABLE_SMARTSPACE_ENHANCED=true</item>
+        <item>launcher/enable_web_suggest_on_default_browser=true</item>
+        <item>launcher/ENABLE_WIDGETS_PICKER_AIAI_SEARCH=true</item>
+        <item>launcher/GBOARD_UPDATE_ENTER_KEY=true</item>
+        <item>launcher/INVOKE_OMNI_LPH=true</item>
+        <item>launcher/INVOKE_OMNI_LPH_MPR=true</item>
+        <item>launcher/long_press_home_button_to_search=true</item>
+        <item>launcher/long_press_home_button_to_search_mpr=true</item>
+        <item>launcher/LPNH_SLOP_PERCENTAGE=71</item>
+        <item>launcher/LPNH_TIMEOUT_MS=400</item>
+        <item>launcher/ANIMATE_LPNH=true</item>
+        <item>launcher/SHRINK_NAV_HANDLE_ON_PRESS=true</item>
+        <item>launcher/press_hold_nav_handle_to_search=true</item>
+        <item>launcher/press_hold_nav_handle_to_search_mpr=true</item>
+        <item>launcher/show_search_educard_qsb=true</item>
+        <item>launcher/show_three_dot_menu_qsb=true</item>
+        <item>launcher/use_app_search_for_web=true</item>
+        <item>launcher/use_fallback_app_search=true</item>
 
         <!-- Pixel Launcher (Recents) -->
-        <item>device_personalization_services/Overview__enable_barcode_detection=true</item>
-        <item>device_personalization_services/Overview__enable_image_search=true</item>
+        <item>device_personalization_services/Overview__enable_barcode_detection=false</item>
+        <item>device_personalization_services/Overview__enable_image_search=false</item>
+        <item>device_personalization_services/Overview__enable_image_selection=true</item>
         <item>device_personalization_services/Overview__enable_japanese_ocr=true</item>
         <item>device_personalization_services/Overview__enable_lens_r_overview_long_press=true</item>
         <item>device_personalization_services/Overview__enable_lens_r_overview_select_mode=true</item>
         <item>device_personalization_services/Overview__enable_lens_r_overview_translate_action=true</item>
+        <item>device_personalization_services/Overview__enable_overview=true</item>
+        <item>device_personalization_services/Overview__enable_pir_clearcut_logging=true</item>
+        <item>device_personalization_services/Overview__enable_pir_westworld_logging=true</item>
+        <item>device_personalization_services/Overview__enable_proactive_hints=false</item>
+        <item>device_personalization_services/Overview__enable_superpacks_pir_protocol=true</item>
+        <item>device_personalization_services/Overview__min_lens_agsa_app_version=301084649</item>
 
         <!-- Disable federated learning -->
         <item>device_personalization_services/OverviewFederatedAnalytics__enable_fa=false</item>
