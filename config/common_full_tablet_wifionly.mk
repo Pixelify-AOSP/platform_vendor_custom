@@ -1,7 +1,7 @@
-# Inherit mobile full common Lineage stuff
-$(call inherit-product, vendor/lineage/config/common_mobile_full.mk)
+# Inherit mobile full common ASCP stuff
+$(call inherit-product, vendor/custom/config/common_mobile_full.mk)
 
-# Inherit tablet common Lineage stuff
-$(call inherit-product, vendor/lineage/config/tablet.mk)
+# Inherit tablet common ASCP stuff
+$(call inherit-product, vendor/custom/config/tablet.mk)
 
-$(call inherit-product, vendor/lineage/config/wifionly.mk)
+$(call inherit-product, vendor/custom/config/wifionly.mk)
