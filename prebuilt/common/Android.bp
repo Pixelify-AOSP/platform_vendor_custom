@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2024-2025 ASCP OS Project
+// SPDX-License-Identifier: Apache-2.0
+
 prebuilt_etc_xml {
     name: "sensitive_pn.xml",
     product_specific: true,
@@ -6,13 +9,13 @@ prebuilt_etc_xml {
 }
 
 prebuilt_etc_xml {
-    name: "lineage-component-overrides.xml",
+    name: "ascp-component-overrides.xml",
     product_specific: true,
-    src: "etc/lineage-component-overrides.xml",
+    src: "etc/ascp-component-overrides.xml",
     sub_dir: "sysconfig",
 }
 
 prebuilt_addon_d {
-    name: "50-lineage.sh",
-    src: "bin/50-lineage.sh",
+    name: "50-ascp.sh",
+    src: "bin/50-ascp.sh",
 }
