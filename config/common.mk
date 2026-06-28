@@ -248,3 +248,15 @@ include vendor/custom/config/version.mk
 -include vendor/custom-priv/keys/keys.mk
 
 -include $(WORKSPACE)/build_env/image-auto-bits.mk
+
+# Revanced
+WITH_REVANCED ?= false
+ifeq ($(WITH_REVANCED),true)
+    PRODUCT_PRODUCT_PROPERTIES += \
+        persist.sys.revan.mod=true
+    $(call inherit-product, vendor/revanced/products/revanced.mk)
+else
+    PRODUCT_PRODUCT_PROPERTIES += \
+        persist.sys.revan.mod=false
+endif
+
