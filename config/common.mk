@@ -259,3 +259,11 @@ include vendor/custom/config/version.mk
 -include vendor/custom-priv/keys/keys.mk
 
 -include $(WORKSPACE)/build_env/image-auto-bits.mk
+
+# Revanced
+WITH_REVANCED ?= false
+ifeq ($(WITH_REVANCED),true)
+    $(call inherit-product, vendor/revanced/products/revanced.mk)
+    PRODUCT_SYSTEM_PROPERTIES += ro.revanced.enabled=true
+endif
+
