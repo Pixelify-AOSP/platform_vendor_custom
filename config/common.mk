@@ -14,6 +14,8 @@ PRODUCT_BRAND ?= ASCP OS
 
 TARGET_EXCLUDE_BACKUPTOOL := true
 
+RELAX_USES_LIBRARY_CHECK=true
+
 ifeq ($(PRODUCT_GMS_CLIENTID_BASE),)
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.com.google.clientidbase=android-google
@@ -54,6 +56,9 @@ endif
 # Disable extra StrictMode features on all non-engineering builds
 PRODUCT_PRODUCT_PROPERTIES += persist.sys.strictmode.disable=true
 endif
+
+# GMS
+include vendor/custom/config/pixel.mk
 
 ifneq ($(strip $(AB_OTA_PARTITIONS) $(AB_OTA_POSTINSTALL_CONFIG)),)
 
@@ -159,9 +164,11 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     rsync
 
+ifeq ($(WITH_GMS),false)
 # Storage manager
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.storage_manager.enabled=true
+endif
 
 # These packages are excluded from user builds
 PRODUCT_PACKAGES_DEBUG += \
@@ -202,9 +209,11 @@ endif
 $(call inherit-product, vendor/custom/audio/audio.mk)
 
 # SetupWizard
+ifeq ($(WITH_GMS),false)
 PRODUCT_PRODUCT_PROPERTIES += \
     setupwizard.theme=glif_v4 \
     setupwizard.feature.day_night_mode_enabled=true
+endif
 
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += vendor/custom/overlay/no-rro
 PRODUCT_PACKAGE_OVERLAYS += \
