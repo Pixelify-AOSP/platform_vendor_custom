@@ -30,13 +30,6 @@ else
 ASCP_TYPE_CODE := UN
 endif
 
-ifeq ($(ASCP_BUILD_TYPE),OFFICIAL)
-PRODUCT_PACKAGES += \
-    Updater
-
-PRODUCT_COPY_FILES += \
-    vendor/custom/prebuilt/common/etc/init/init.ascp-updater.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.ascp-updater.rc
-endif
 
 # Version string: ASCP-v6.0-<device>-<type>-<date>
 ASCP_VERSION_SUFFIX := $(ASCP_ANDROID_VERSION).$(ASCP_BASE_VERSION).$(ASCP_DEVICE_CODE)$(ASCP_BRAND_CODE)$(ASCP_REGION_CODE)$(ASCP_TYPE_CODE)
@@ -52,4 +45,6 @@ PRODUCT_SYSTEM_PROPERTIES += \
     ro.ascp.version=$(ASCP_PACKAGE_VERSION) \
     ro.ascp.android.version=$(ASCP_ANDROID_VERSION) \
     ro.ascp.build.date=$(ASCP_BUILD_DATE) \
-    ro.ascp.device=$(TARGET_PRODUCT)
+    ro.ascp.device=$(TARGET_PRODUCT) \
+    ro.ascp.releasetype=$(ASCP_BUILD_TYPE) \
+    ro.ascp.ota.test_mode=false
