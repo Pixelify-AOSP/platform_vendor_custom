@@ -6,9 +6,23 @@ export RUST_AOSP_PREBUILTS_VERSION="${RUST_VERSION}"
 
 function brunch()
 {
-    breakfast $*
+    local args=()
+    local delta=false
+    for arg in "$@"; do
+        if [ "$arg" = "--delta" ]; then
+            delta=true
+        else
+            args+=("$arg")
+        fi
+    done
+
+    breakfast "${args[@]}"
     if [ $? -eq 0 ]; then
-        mka bacon
+        if [ "$delta" = "true" ]; then
+            mka bacon --delta
+        else
+            mka bacon
+        fi
     else
         echo "No such item in brunch menu. Try 'breakfast'"
         return 1
@@ -141,7 +155,16 @@ function privateremote()
 }
 
 function mka() {
-    m "$@"
+    local args=()
+    export ASCP_DELTA_BUILD=false
+    for arg in "$@"; do
+        if [ "$arg" = "--delta" ]; then
+            export ASCP_DELTA_BUILD=true
+        else
+            args+=("$arg")
+        fi
+    done
+    m "${args[@]}"
 }
 
 function cmka() {

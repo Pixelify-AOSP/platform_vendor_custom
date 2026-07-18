@@ -1,0 +1,3 @@
+on post-fs-data
+    mkdir /data/custom-ota 0770 system cache
+    mkdir /data/custom-ota 0770 system cache encryption=Require

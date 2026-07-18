@@ -7,7 +7,10 @@ if [ -z "$DEVICE" ]; then
 fi
 
 PRODUCT_OUT="out/target/product/${DEVICE}"
-TARGET_FILES_DIR="${PRODUCT_OUT}/obj/PACKAGING/target_files_intermediates/custom_${DEVICE}-target_files"
+TARGET_FILES_DIR=$(find "${PRODUCT_OUT}/obj/PACKAGING/target_files_intermediates" -maxdepth 1 -name "*-target_files" 2>/dev/null | tail -n 1)
+if [ -z "$TARGET_FILES_DIR" ]; then
+    TARGET_FILES_DIR="${PRODUCT_OUT}/obj/PACKAGING/target_files_intermediates/custom_${DEVICE}-target_files"
+fi
 BACKUP_DIR="target_files/${DEVICE}"
 
 # We only run if ASCP_BUILDTYPE is OFFICIAL
@@ -51,8 +54,11 @@ vendor/custom/build/tools/generate_update_json.sh "$NEW_ZIP" "$DEVICE" >> "$LOG_
 INC_GENERATED=false
 INC_SKIP_REASON="No previous target files found"
 
-# 2. Check if we have a previous build target files directory to generate incremental update
-if [ -d "${BACKUP_DIR}/previous_target_files" ]; then
+# 2. Check if delta build was requested and if we have a previous build target files directory
+if [ "${ASCP_DELTA_BUILD}" != "true" ]; then
+    INC_SKIP_REASON="Delta build not requested (use --delta)"
+    echo "Delta build not requested. Skipping incremental generation." >> "$LOG_FILE"
+elif [ -d "${BACKUP_DIR}/previous_target_files" ]; then
     # Extract the previous zip filename from the backup dir
     PREV_ZIP_NAME=$(cat "${BACKUP_DIR}/previous_zip_name.txt" 2>/dev/null)
     
