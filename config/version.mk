@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ASCP_ANDROID_VERSION := 17
-ASCP_BASE_VERSION := 6.0
+ASCP_BASE_VERSION := 6.1
 ASCP_BUILD_DATE := $(shell date -u +%Y%m%d-%H%M)
 
 ASCP_MAINTAINER ?= Unofficial
