@@ -168,22 +168,32 @@ function mka() {
 }
 
 function cmka() {
-    if [ ! -z "$1" ]; then
-        for i in "$@"; do
+    local targets=()
+    local delta_flag=""
+    for arg in "$@"; do
+        if [ "$arg" = "--delta" ]; then
+            delta_flag="--delta"
+        else
+            targets+=("$arg")
+        fi
+    done
+
+    if [ ${#targets[@]} -gt 0 ]; then
+        for i in "${targets[@]}"; do
             case $i in
                 bacon|otapackage|systemimage)
-                    mka installclean
-                    mka $i
+                    mka installclean $delta_flag
+                    mka $i $delta_flag
                     ;;
                 *)
-                    mka clean-$i
-                    mka $i
+                    mka clean-$i $delta_flag
+                    mka $i $delta_flag
                     ;;
             esac
         done
     else
-        mka clean
-        mka
+        mka clean $delta_flag
+        mka $delta_flag
     fi
 }
 
