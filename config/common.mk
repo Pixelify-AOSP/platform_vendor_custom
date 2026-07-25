@@ -269,13 +269,6 @@ endif
 # Audio files
 $(call inherit-product, vendor/custom/audio/audio.mk)
 
-# SetupWizard
-ifeq ($(WITH_GMS),false)
-PRODUCT_PRODUCT_PROPERTIES += \
-    setupwizard.theme=glif_v4 \
-    setupwizard.feature.day_night_mode_enabled=true
-endif
-
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += vendor/custom/overlay/no-rro
 PRODUCT_PACKAGE_OVERLAYS += \
     vendor/custom/overlay/common \

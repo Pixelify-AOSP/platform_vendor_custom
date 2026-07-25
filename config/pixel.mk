@@ -3,14 +3,18 @@ WITH_GMS := true
 # Pixel Clocks
 $(call inherit-product, vendor/pixel/clocks/products/clocks.mk)
 
-# Pixel additions
-$(call inherit-product, vendor/google/overlays/ThemeIcons/config.mk)
-$(call inherit-product, vendor/pixel-style/config/common.mk)
+# Pixel GMS
+$(call inherit-product, vendor/pixel/gms/products/gms.mk)
 
-# Don't dexpreopt GMS prebuilts.
-DONT_DEXPREOPT_PREBUILTS := true
+# Pixel Prebuilts
+$(call inherit-product, vendor/pixel/prebuilts/config.mk)
 
-# Full GMS
-$(call inherit-product, vendor/gms/gms_full.mk)
+# Pixel Sounds
+$(call inherit-product, vendor/pixel/sounds/products/sounds.mk)
 
+# Pixel Launcher
+$(call inherit-product, vendor/pixel/launcher/products/launcher.mk)
+
+# Pixel ThemePicker
+$(call inherit-product, vendor/pixel/themepicker/products/themepicker.mk)
 
