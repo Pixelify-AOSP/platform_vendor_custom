@@ -11,17 +11,6 @@ include vendor/custom/config/aosp_audio.mk
 # Include ASCP audio files
 include vendor/custom/config/ascp_audio.mk
 
-# Default notification/alarm sounds
-ifeq ($(WITH_GMS),true)
-PRODUCT_PRODUCT_PROPERTIES += \
-    ro.config.notification_sound=Kernel.ogg \
-    ro.config.alarm_alert=Fresh_morning.ogg
-else
-PRODUCT_PRODUCT_PROPERTIES += \
-    ro.config.notification_sound=Argon.ogg \
-    ro.config.alarm_alert=Hassium.ogg
-endif
-
 # Apps
 PRODUCT_PACKAGES += \
     AvatarPicker \
