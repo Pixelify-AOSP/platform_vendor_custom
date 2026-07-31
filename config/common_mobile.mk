@@ -41,6 +41,7 @@ PRODUCT_DEXPREOPT_SPEED_APPS += \
 endif
 
 PRODUCT_PACKAGES += \
+    Launcher3NoGestureHintOverlay \
     Launcher3Overlay
 
 # Extra cmdline tools
