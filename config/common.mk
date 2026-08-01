@@ -325,8 +325,12 @@ include vendor/custom/config/version.mk
 # Revanced
 WITH_REVANCED ?= false
 ifeq ($(WITH_REVANCED),true)
+    PRODUCT_PRODUCT_PROPERTIES += \
+        persist.sys.revan.mod=true
     $(call inherit-product, vendor/revanced/products/revanced.mk)
-    PRODUCT_SYSTEM_PROPERTIES += ro.revanced.enabled=true
+else
+    PRODUCT_PRODUCT_PROPERTIES += \
+        persist.sys.revan.mod=false
 endif
 
 # LMOFreeform
