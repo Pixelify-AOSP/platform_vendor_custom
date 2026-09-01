@@ -347,3 +347,7 @@ endif
 # OmniJaws
 PRODUCT_PACKAGES += \
     OmniJaws
+
+# Keystore Compatibility
+PRODUCT_COPY_FILES += \
+    vendor/custom/target/init/keystore-compat.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/keystore-compat.rc
