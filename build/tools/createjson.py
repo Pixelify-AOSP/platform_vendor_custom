@@ -97,7 +97,7 @@ def get_version_from_buildprop(buildprop_path):
         for line in f:
             if line.startswith("ro.ascp.build.version="):
                 return line.split('=')[1].strip()
-    return "6.2"
+    return "6.3"
 
 def get_checksum(file_path, checksum_type='md5'):
     if checksum_type == 'md5':
