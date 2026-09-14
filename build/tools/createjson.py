@@ -5,129 +5,193 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import argparse
-import os
 import hashlib
 import json
+import os
+import re
+import sys
+import zipfile
 
-def generate_json(target_device, product_out, file_name, build_variant):
-    output = os.path.join(product_out, f"{target_device}.json")
-
-    if os.path.exists(output):
-        os.remove(output)
-
-    buildprop = os.path.join(product_out, "system", "build.prop")
-    version = get_version_from_buildprop(buildprop)
-
-    existing_ota_json = os.path.join(f"./official_devices/API", f"{target_device}.json")
-
-    maintainer = ""
-    currently_maintained = False
-    oem = ""
-    device = ""
-    forum = ""
-    firmware = ""
-    paypal = ""
-    github = ""
-    initial_installation_images = []
-    extra_images = []
-
-    if os.path.exists(existing_ota_json):
-        with open(existing_ota_json, 'r') as f:
-            ota_data = json.load(f)
-        response_data = ota_data["response"][0]
-        maintainer = response_data.get("maintainer", "")
-        currently_maintained = response_data.get("currently_maintained", False)
-        oem = response_data.get("oem", "")
-        device = response_data.get("device", "")
-        forum = response_data.get("forum", "")
-        firmware = response_data.get("firmware", "")
-        paypal = response_data.get("paypal", "")
-        github = response_data.get("github", "")
-        initial_installation_images = response_data.get("initial_installation_images", [])
-        extra_images = response_data.get("extra_images", [])
-
-    filename = file_name
-    if "OFFICIAL" in file_name:
-        download = f"https://sourceforge.net/projects/project-ascp/files/{target_device}/{version}/{file_name}/download"
-    else:
-        download = f"https://sourceforge.net/projects/project-ascp-unofficial/files/{target_device}/{version}/{file_name}/download"
-
-    timestamp = get_timestamp_from_buildprop(buildprop)
-    md5 = get_checksum(os.path.join(product_out, file_name), 'md5')
-    sha256 = get_checksum(os.path.join(product_out, file_name), 'sha256')
-    size = os.path.getsize(os.path.join(product_out, file_name))
-
-    json_data = {
-        "response": [
-            {
-                "maintainer": maintainer,
-                "currently_maintained": currently_maintained,
-                "oem": oem,
-                "device": device,
-                "filename": filename,
-                "download": download,
-                "timestamp": timestamp,
-                "md5": md5,
-                "sha256": sha256,
-                "size": size,
-                "version": version,
-                "buildtype": build_variant,
-                "forum": f"{forum}" if forum else "",
-                "firmware": f"{firmware}" if firmware else "",
-                "paypal": f"{paypal}" if paypal else "",
-                "github": github,
-                "initial_installation_images": initial_installation_images,
-                "extra_images": extra_images
-            }
-        ]
-    }
-
-    with open(output, 'w') as f:
-        json.dump(json_data, f, indent=2)
-
-def get_timestamp_from_buildprop(buildprop_path):
-    with open(buildprop_path, 'r') as f:
-        for line in f:
-            if "ro.system.build.date.utc" in line:
-                return int(line.split('=')[1].strip())
-    return 0
-
-def get_version_from_buildprop(buildprop_path):
-    with open(buildprop_path, 'r') as f:
-        for line in f:
-            if line.startswith("ro.ascp.build.version="):
-                return line.split('=')[1].strip()
-    return "6.3"
-
-def get_checksum(file_path, checksum_type='md5'):
-    if checksum_type == 'md5':
-        return calculate_md5(file_path)
-    elif checksum_type == 'sha256':
-        return calculate_sha256(file_path)
-
-def calculate_md5(file_path):
-    hash_md5 = hashlib.md5()
-    with open(file_path, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
 
 def calculate_sha256(file_path):
     hash_sha256 = hashlib.sha256()
     with open(file_path, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
+        for chunk in iter(lambda: f.read(65536), b""):
             hash_sha256.update(chunk)
     return hash_sha256.hexdigest()
 
+
+def calculate_md5(file_path):
+    hash_md5 = hashlib.md5()
+    with open(file_path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+
+def read_zip_metadata(zip_path):
+    metadata = {}
+    if os.path.isfile(zip_path):
+        try:
+            with zipfile.ZipFile(zip_path, "r") as z:
+                if "META-INF/com/android/metadata" in z.namelist():
+                    content = z.read("META-INF/com/android/metadata").decode("utf-8", errors="ignore")
+                    for line in content.splitlines():
+                        if "=" in line:
+                            k, v = line.split("=", 1)
+                            metadata[k.strip()] = v.strip()
+        except Exception as e:
+            print(f"Warning reading zip metadata: {e}", file=sys.stderr)
+    return metadata
+
+
+def parse_buildprop(buildprop_path):
+    props = {}
+    if os.path.isfile(buildprop_path):
+        with open(buildprop_path, "r", encoding="utf-8", errors="ignore") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    props[k.strip()] = v.strip()
+    return props
+
+
+def extract_version(file_name, props):
+    match = re.search(r"ASCP-v([0-9]+(?:\.[0-9]+)*)", file_name)
+    if match:
+        return match.group(1)
+    if "ro.ascp.version.base" in props:
+        return props["ro.ascp.version.base"]
+    if "ro.ascp.build.version" in props:
+        v = props["ro.ascp.build.version"]
+        parts = v.split(".")
+        if len(parts) >= 2:
+            return f"{parts[0]}.{parts[1]}"
+        return v
+    return "6.3"
+
+
+def build_file_entry(zip_path, file_name, target_device, version, props, metadata, is_official):
+    size = os.path.getsize(zip_path) if os.path.isfile(zip_path) else 0
+    sha256 = calculate_sha256(zip_path) if os.path.isfile(zip_path) else ""
+
+    patch_level = (
+        metadata.get("post-security-patch-level")
+        or props.get("ro.build.version.security_patch")
+        or "2026-09-01"
+    )
+    sdk_level_str = (
+        metadata.get("post-sdk-level")
+        or props.get("ro.build.version.sdk")
+        or "36"
+    )
+    try:
+        sdk_level = int(sdk_level_str)
+    except ValueError:
+        sdk_level = 36
+
+    if is_official:
+        url = f"https://sourceforge.net/projects/project-ascp/files/{target_device}/{version}/{file_name}/download"
+    else:
+        url = f"https://sourceforge.net/projects/project-ascp-unofficial/files/{target_device}/{version}/{file_name}/download"
+
+    entry = {
+        "filename": file_name,
+        "os_patch_level": patch_level,
+        "os_sdk_level": sdk_level,
+        "sha256": sha256,
+        "size": size,
+        "url": url,
+    }
+
+    if "ota-property-files" in metadata:
+        entry["ota_property_files"] = metadata["ota-property-files"]
+
+    return entry
+
+
+def generate_json(target_device, product_out, file_name, build_variant, incremental_file=None):
+    zip_path = os.path.join(product_out, file_name)
+    buildprop_path = os.path.join(product_out, "system", "build.prop")
+    props = parse_buildprop(buildprop_path)
+    metadata = read_zip_metadata(zip_path)
+
+    version = extract_version(file_name, props)
+    variant_str = (build_variant or "OFFICIAL").upper()
+    is_official = variant_str == "OFFICIAL" or "OFFICIAL" in file_name
+
+    # Determine datetime timestamp
+    timestamp = 0
+    if "post-timestamp" in metadata:
+        try:
+            timestamp = int(metadata["post-timestamp"])
+        except ValueError:
+            pass
+    if timestamp == 0 and "ro.system.build.date.utc" in props:
+        try:
+            timestamp = int(props["ro.system.build.date.utc"])
+        except ValueError:
+            pass
+    if timestamp == 0 and os.path.isfile(zip_path):
+        timestamp = int(os.path.getmtime(zip_path))
+
+    # Full OTA file entry
+    full_file_entry = build_file_entry(
+        zip_path, file_name, target_device, version, props, metadata, is_official
+    )
+
+    update_item = {
+        "datetime": timestamp,
+        "files": [full_file_entry],
+        "type": variant_str,
+        "version": version,
+    }
+
+    # Incremental entry if provided
+    if incremental_file:
+        inc_zip_path = os.path.join(product_out, incremental_file)
+        if os.path.isfile(inc_zip_path):
+            inc_metadata = read_zip_metadata(inc_zip_path)
+            inc_file_entry = build_file_entry(
+                inc_zip_path, incremental_file, target_device, version, props, inc_metadata, is_official
+            )
+            update_item["incremental"] = [inc_file_entry]
+
+    # Primary output: Array matching official_devices/API/updater/{device}.json
+    updater_json_data = [update_item]
+
+    output_path = os.path.join(product_out, f"{target_device}.json")
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(updater_json_data, f, indent=2)
+    print(f"Generated Updater feed JSON: {output_path}")
+
+    # If official_devices repo exists in root, automatically sync official_devices/API/updater/{device}.json
+    official_updater_dir = os.path.join("official_devices", "API", "updater")
+    if os.path.isdir(official_updater_dir):
+        official_updater_path = os.path.join(official_updater_dir, f"{target_device}.json")
+        with open(official_updater_path, "w", encoding="utf-8") as f:
+            json.dump(updater_json_data, f, indent=2)
+        print(f"Synced to official_devices: {official_updater_path}")
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Generate a JSON file for OTA.")
+    parser = argparse.ArgumentParser(description="Generate a JSON file for Updater feed.")
     parser.add_argument("target_device", help="Target device name")
     parser.add_argument("product_out", help="Product output directory")
-    parser.add_argument("file_name", help="File name for OTA")
-    parser.add_argument("build_variant", help="Build variant")
+    parser.add_argument("file_name", help="File name for full OTA")
+    parser.add_argument("build_variant", help="Build variant (OFFICIAL/UNOFFICIAL)")
+    parser.add_argument("--incremental", dest="incremental_file", default=None, help="File name for incremental OTA (optional)")
 
     args = parser.parse_args()
-    generate_json(args.target_device, args.product_out, args.file_name, args.build_variant)
+    generate_json(
+        args.target_device,
+        args.product_out,
+        args.file_name,
+        args.build_variant,
+        args.incremental_file,
+    )
+
 
 if __name__ == "__main__":
     main()

@@ -48,7 +48,12 @@ file_dir=$(dirname "$ZIP_PATH")
 file_name=$(basename "$ZIP_PATH")
 
 if [ -z "$DEVICE" ]; then
-    DEVICE=$(echo $file_name | cut -d'-' -f4)
+    DEVICE=$(echo "$file_name" | cut -d'-' -f3)
+fi
+
+VERSION=$(echo "$file_name" | sed -n 's/.*-v\([0-9.]*\)-.*/\1/p')
+if [ -z "$VERSION" ]; then
+    VERSION="6.3"
 fi
 
 if [ -n "${ASCP_BUILDTYPE}" ]; then
@@ -59,9 +64,12 @@ else
 fi
 
 md5_hash=$(md5sum "$ZIP_PATH" | cut -d' ' -f1)
+sha256_hash=$(sha256sum "$ZIP_PATH" | cut -d' ' -f1)
+size_bytes=$(stat -c%s "$ZIP_PATH" 2>/dev/null || wc -c < "$ZIP_PATH" | tr -d ' ')
 datetime=$(date +%s)
 
-BASE_URL="https://sourceforge.net/projects/project-ascp/files/${DEVICE}"
+BASE_URL="https://sourceforge.net/projects/project-ascp/files/${DEVICE}/${VERSION}"
+DOWNLOAD_URL="${BASE_URL}/${file_name}/download"
 
 echo -e "${GREEN}Generating OpenDelta JSON: ${YELLOW}${output_filename}${NC}"
 
@@ -81,8 +89,12 @@ fi
     echo "    {"
     echo "      \"datetime\": ${datetime},"
     echo "      \"filename\": \"${file_name}\","
-    echo "      \"url\": \"${BASE_URL}/${file_name}\","
-    echo -n "      \"md5\": \"${md5_hash}\""
+    echo "      \"url\": \"${DOWNLOAD_URL}\","
+    echo "      \"md5\": \"${md5_hash}\","
+    echo "      \"sha256\": \"${sha256_hash}\","
+    echo "      \"size\": ${size_bytes},"
+    echo "      \"version\": \"${VERSION}\","
+    echo -n "      \"buildtype\": \"${ASCP_BUILDTYPE:-OFFICIAL}\""
 } > "${file_dir}/${output_filename}"
 
 if [[ $isPayload == 1 ]]; then
@@ -105,3 +117,11 @@ fi
 
 echo -e "${GREEN}Done generating ${YELLOW}${output_filename}${NC}"
 echo "${file_dir}/${output_filename}"
+
+# Also generate unified Updater feed JSON matching official_devices/API/updater/{device}.json
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+if [ -f "${SCRIPT_DIR}/createjson.py" ]; then
+    python3 "${SCRIPT_DIR}/createjson.py" "$DEVICE" "$file_dir" "$file_name" "${ASCP_BUILDTYPE:-OFFICIAL}"
+elif [ -f "vendor/custom/build/tools/createjson.py" ]; then
+    python3 vendor/custom/build/tools/createjson.py "$DEVICE" "$file_dir" "$file_name" "${ASCP_BUILDTYPE:-OFFICIAL}"
+fi

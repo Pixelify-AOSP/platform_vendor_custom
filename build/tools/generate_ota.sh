@@ -142,6 +142,20 @@ with zipfile.ZipFile(sys.argv[1]) as z:
             
             echo "Done generating delta_official.json" >> "$LOG_FILE"
             INC_GENERATED=true
+
+            # Update unified Updater feed JSON with incremental OTA package
+            SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+            CREATEJSON_BIN=""
+            if [ -f "${SCRIPT_DIR}/createjson.py" ]; then
+                CREATEJSON_BIN="${SCRIPT_DIR}/createjson.py"
+            elif [ -f "vendor/custom/build/tools/createjson.py" ]; then
+                CREATEJSON_BIN="vendor/custom/build/tools/createjson.py"
+            fi
+
+            if [ -n "$CREATEJSON_BIN" ]; then
+                echo "Updating Updater feed JSON with incremental package..." >> "$LOG_FILE"
+                python3 "$CREATEJSON_BIN" "$DEVICE" "$PRODUCT_OUT" "$NEW_ZIP_NAME" "${ASCP_BUILDTYPE:-OFFICIAL}" --incremental "$INC_ZIP_NAME" >> "$LOG_FILE" 2>&1
+            fi
         else
             echo "Failed to generate incremental OTA." >> "$LOG_FILE"
             INC_SKIP_REASON="Failed to generate incremental OTA (check ota_generation.log)"
@@ -181,6 +195,7 @@ printf "  ${CYAN}%-15s :${PURPLE} %s${NC}\n" "Package Zip" "$NEW_ZIP"
 printf "  ${CYAN}%-15s :${PURPLE} %s${NC}\n" "SHA256" "$FULL_SHA"
 printf "  ${CYAN}%-15s :${PURPLE} %s${NC}\n" "Size" "$FULL_SIZE"
 printf "  ${CYAN}%-15s :${PURPLE} %s${NC}\n" "JSON Path" "${PRODUCT_OUT}/full_official.json"
+printf "  ${CYAN}%-15s :${PURPLE} %s${NC}\n" "Updater Feed" "${PRODUCT_OUT}/${DEVICE}.json"
 echo ""
 
 printf "${CYAN}Incremental OTA Package Details:${NC}\n"
