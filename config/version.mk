@@ -48,3 +48,14 @@ PRODUCT_SYSTEM_PROPERTIES += \
     ro.ascp.device=$(TARGET_PRODUCT) \
     ro.ascp.releasetype=$(ASCP_BUILD_TYPE) \
     ro.ascp.ota.test_mode=false
+
+# Updater Properties
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.custom.device=$(TARGET_PRODUCT) \
+    ro.custom.version=$(ASCP_PACKAGE_VERSION) \
+    net.pixelos.version=$(ASCP_ANDROID_VERSION)
+
+ifeq ($(ASCP_BUILD_TYPE),OFFICIAL)
+    PRODUCT_PRODUCT_PROPERTIES += \
+        net.pixelos.build_type=ci
+endif

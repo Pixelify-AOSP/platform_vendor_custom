@@ -71,7 +71,7 @@ datetime=$(date +%s)
 BASE_URL="https://sourceforge.net/projects/project-ascp/files/${DEVICE}/${VERSION}"
 DOWNLOAD_URL="${BASE_URL}/${file_name}/download"
 
-echo -e "${GREEN}Generating OpenDelta JSON: ${YELLOW}${output_filename}${NC}"
+echo -e "${GREEN}Generating OTA update JSON: ${YELLOW}${output_filename}${NC}"
 
 isPayload=0
 [ -f payload_properties.txt ] && rm payload_properties.txt

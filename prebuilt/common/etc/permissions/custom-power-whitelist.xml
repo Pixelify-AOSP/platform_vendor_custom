@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-    <allow-in-power-save package="eu.chainfire.opendelta" />
+    <allow-in-power-save package="net.pixelos.ota" />
 </config>
