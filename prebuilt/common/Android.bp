@@ -14,3 +14,8 @@ prebuilt_etc_xml {
     src: "etc/ascp-component-overrides.xml",
     sub_dir: "sysconfig",
 }
+
+prebuilt_addon_d {
+    name: "50-ascp.sh",
+    src: "bin/50-ascp.sh",
+}

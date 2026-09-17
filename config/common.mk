@@ -12,8 +12,6 @@ PRODUCT_SOURCE_ROOT_DIRS += -kernel/platform
 
 PRODUCT_BRAND ?= ASCP OS
 
-TARGET_EXCLUDE_BACKUPTOOL := true
-
 RELAX_USES_LIBRARY_CHECK=true
 
 ifeq ($(PRODUCT_GMS_CLIENTID_BASE),)
@@ -80,7 +78,27 @@ PRODUCT_PACKAGES += \
 # GMS
 include vendor/custom/config/pixel.mk
 
+# Backup Tool
+PRODUCT_COPY_FILES += \
+    vendor/custom/prebuilt/common/bin/backuptool.sh:install/bin/backuptool.sh \
+    vendor/custom/prebuilt/common/bin/backuptool.functions:install/bin/backuptool.functions
+
+PRODUCT_PACKAGES += \
+    50-ascp.sh
+
+PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
+    system/addon.d/50-ascp.sh
+
 ifneq ($(strip $(AB_OTA_PARTITIONS) $(AB_OTA_POSTINSTALL_CONFIG)),)
+PRODUCT_COPY_FILES += \
+    vendor/custom/prebuilt/common/bin/backuptool_ab.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_ab.sh \
+    vendor/custom/prebuilt/common/bin/backuptool_ab.functions:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_ab.functions \
+    vendor/custom/prebuilt/common/bin/backuptool_postinstall.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/backuptool_postinstall.sh
+
+PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
+    system/bin/backuptool_ab.sh \
+    system/bin/backuptool_ab.functions \
+    system/bin/backuptool_postinstall.sh
 
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.ota.allow_downgrade=true
