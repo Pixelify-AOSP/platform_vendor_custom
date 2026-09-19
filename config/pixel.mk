@@ -1,5 +1,9 @@
 WITH_GMS := true
 
+# PixelSetupWizardOverlay
+PRODUCT_PACKAGES += \
+	PixelSetupWizardOverlayExpressive
+
 # Pixel Clocks
 $(call inherit-product, vendor/pixel/clocks/products/clocks.mk)
 
